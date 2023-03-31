@@ -10,14 +10,16 @@ function App() {
 
   const toggleDropDown = () => {
     setOpenDropDown(openDropDown ? false : true)
+    console.log("MEOO")
     // x.current ? x.current = false : x.current = true
   }
   return (
     <div className="App">
+      <h1>CLONE</h1>
       <button className='ignore' style={{ padding: '10px' }} onClick={toggleDropDown} />
       <AutoComplete
         //    list={[]}
-        //  list={[3, 33, 13, 222,10, 100]}
+          list={[3, 33, 13, 222,10, 100]}
         //  list={[3, 33, 13, 222,10, 100, '1Jack', 'Jack']}
         //   list={[
         //   {name: 'terry', clubs: {morning: "science", evening: "math"} },
@@ -26,16 +28,16 @@ function App() {
         //   {name: 'teri', clubs: {morning: "home", evening: "test"}},
         //   {name: '', clubs: {morning: "sports", evening: "fitness"}}
         // ]}
-        list={testData}
+        //list={testData}
         getPropValue={(listItem) => listItem.name}
         showAll={true}
         highlightFirstItem={false}
         clearOnSelect={false}
         inputProps={{
           placeholder: "search...",
-          // onMouseDown: (e) => {
-          //   e.target.value = ""
-          // }
+          onMouseDown: (e) => {
+            e.target.value = ""
+          }
         }}
         inputStyle={{
           width: "200px",
@@ -44,7 +46,8 @@ function App() {
         highlightedItem={{
           backgroundColor: "orange"
         }}
-        wrapperDiv={"inline"}
+        wrapperDiv={"flex"}
+        wrapperStyle={{width:'100px', display: "inline"}}
         listItemStyle={{
           cursor: "pointer",
           padding: "5px"

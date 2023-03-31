@@ -28,59 +28,18 @@ export default function AutoComplete(
 ) {
 
   const initialState ={
-    //isOpen : [],
+    isOpen : [],
     suggestedWords : []
   }
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { suggestedWords } = state;
+
   const [isHighlighted, setIsHighlighted] = useState(0);
-  //const [suggestedWords, setSuggestedWords] = useState([]);
+  const [suggestedWords, setSuggestedWords] = useState([]);
   const trie = useRef();
   const cacheRef = useRef();
   const cleanList = useRef([])
   const inputRef = useRef();
   const dropDownRef = useRef();
   const itemsRef = useRef([]);
-
-  function reducer(state, action) {
-    console.log(state)
-    switch (action.type) {
-      
-    //   case "INITIAL": {
-    //     if (isOpen === true) {
-    //       if (showAll === true && !inputRef.current.value) {
-    //         return {
-    //           suggestedWords: action.payload
-    //         }
-    //       } else {
-    //         return {
-    //           suggestedWords: inputRef.current.value
-    //         }
-    //       }
-    //     }
-    //     if (isOpen === false) {
-    //     return {
-    //       suggestedWords: [],
-    //     }
-    //   }
-    // }
-      case "SHOWLIST": {
-        return {
-          suggestedWords: action.payload,
-        };
-      }
-      case "RESET": {
-        return({
-        suggestedWords : []
-      })
-      }
-      default:
-        return state;
-    }
-  };
-  
-
-  
 
   useEffect(() => {
 
@@ -108,7 +67,7 @@ export default function AutoComplete(
 
       // Initialize root node and store in the 'trie' ref
       // Then Insert each word in items array into the 'trie' ref
-      // Then store original list in cacheRef to use to detect 'list' prop SHOWLISTs
+      // Then store original list in cacheRef to use to detect 'list' prop changes
       trie.current = new Trie();
       console.log("RAN")
       if (cleanList.current) {
@@ -132,13 +91,13 @@ console.log("RAN@@@")
     // Close dropdown if isOpen is false
     // Open dropdown if isOpen is true
     if (updateIsOpen && isOpen === false) {
-      dispatch({ type: "RESET" });
+      setSuggestedWords([])
     }
     if (updateIsOpen && isOpen === true) {
       if (showAll === true && !inputRef.current.value) {
-        dispatch({ type: "SHOWLIST", payload: cleanList.current });
+        setSuggestedWords(cleanList.current)
       } else {
-        dispatch({ type: "SHOWLIST", payload: inputRef.current.value });
+        setSuggestedWords(trie.current.find(inputRef.current.value))
       }
     }
     cacheRef.current = list
@@ -326,7 +285,7 @@ console.log("RAN@@@")
   // Opens Dropdown by setting suggestedWords state with words passed in
   // If 'updateIsOpen' prop was set it will update to true 
   function openDropDown(words) {
-    dispatch({ type: "SHOWLIST", payload: words });
+    setSuggestedWords(words)
     if (updateIsOpen) {
       updateIsOpen(true)
     }
@@ -336,7 +295,7 @@ console.log("RAN@@@")
   // Resets highlighted index to what is specified by 'highlightFirstItem' prop 
   // If 'updateIsOpen' prop was set, it will update to false 
   function closeDropDown() {
-    dispatch({ type: "RESET" });
+    setSuggestedWords([])
     resetHighlight()
     if (updateIsOpen) {
       updateIsOpen(false)
